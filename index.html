@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شركة الأعلاف المتميزة</title>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --background-color: #f7f9fc;
+            --card-color: #ffffff;
+            --border-radius: 12px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--background-color);
+            color: var(--primary-color);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .card {
+            background: var(--card-color);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 25px;
+            margin-bottom: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: var(--border-radius);
+        }
+
+        h1, h2, h3 {
+            color: inherit;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e1e1e1;
+            border-radius: var(--border-radius);
+            font-size: 16px;
+            transition: border-color 0.3s ease;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+        }
+
+        button {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 600;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            background-color: #2980b9;
+        }
+
+        .delete-btn {
+            background-color: var(--danger-color);
+        }
+
+        .delete-btn:hover {
+            background-color: #c0392b;
+        }
+
+        .admin-btn {
+            background-color: var(--success-color);
+        }
+
+        .admin-btn:hover {
+            background-color: #27ae60;
+        }
+
+        .result {
+            text-align: center;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: var(--border-radius);
+            font-size: 1.2em;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-top: 20px;
+        }
+
+        .customers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .customer-button {
+            background-color: #f7f9fc;
+            border: 2px solid #e1e1e1;
+            color: var(--primary-color);
+            padding: 10px;
+            text-align: center;
+            border-radius: var(--border-radius);
+            transition: all 0.3s ease;
+        }
+
+        .customer-button:hover {
+            border-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .history-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        .history-table th,
+        .history-table td {
+            padding: 12px;
+            text-align: right;
+            border-bottom: 1px solid #e1e1e1;
+        }
+
+        .history-table th {
+            background-color: #f7f9fc;
+            font-weight: 600;
+        }
+
+        .history-table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            overflow-y: auto; /* Allows scrolling */
+        }
+
+        .modal-content {
+            background-color: var(--card-color);
+            border-radius: var(--border-radius);
+            padding: 30px;
+            width: 90%;
+            max-width: 500px;
+            margin: 50px auto;
+            position: relative;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: transparent;
+            border: none;
+            font-size: 20px;
+            color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>شركة الأعلاف المتميزة</h1>
+        </div>
+
+        <button class="admin-btn" onclick="showAdminLogin()">لوحة التحكم</button>
+        <button onclick="showCustomersList()">عرض قائمة العملاء</button>
+
+        <div class="card">
+            <h2>تسجيل المشتريات</h2>
+            <div class="form-group">
+                <label for="customerName">اسم العميل:</label>
+                <input type="text" id="customerName" required>
+            </div>
+
+            <div class="form-group">
+                <label for="feedType">نوع العلف:</label>
+                <select id="feedType" onchange="updatePrice()"></select>
+            </div>
+
+            <div class="form-group">
+                <label>عدد الشكاير:</label>
+                <input type="number" id="quantity" min="1" value="1" onchange="calculateTotal()">
+            </div>
+
+            <div class="form-group">
+                <label for="price">سعر الشكارة:</label>
+                <input type="number" id="price" readonly>
+            </div>
+
+            <button onclick="savePurchase()">حفظ المشتريات</button>
+
+            <div class="result" id="totalResult">
+                الإجمالي: 0 جنيه
+            </div>
+        </div>
+
+        <div class="card" id="purchasesHistory" style="display: none;">
+            <h3 id="historyTitle">سجل المشتريات</h3>
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>التاريخ</th>
+                        <th>نوع العلف</th>
+                        <th>عدد الشكاير</th>
+                        <th>سعر الشكارة</th>
+                        <th>الإجمالي</th>
+                    </tr>
+                </thead>
+                <tbody id="historyTableBody"></tbody>
+            </table>
+            <button class="delete-btn" onclick="deleteCustomer()" style="margin-top: 20px;">حذف العميل</button>
+        </div>
+    </div>
+
+    <div id="adminPanel" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="hideAdminPanel()">×</button>
+            <h3>إدارة الأعلاف</h3>
+            <div class="form-group">
+                <label>إضافة نوع علف جديد:</label>
+                <input type="text" id="newFeedName" placeholder="اسم العلف">
+                <input type="number" id="newFeedPrice" placeholder="سعر الشكارة">
+                <button onclick="addNewFeed()">إضافة</button>
+            </div>
+
+            <h3>الأنواع الحالية:</h3>
+            <div id="feedsList"></div>
+        </div>
+    </div>
+
+    <div id="customersModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="hideCustomersList()">×</button>
+            <h3>قائمة العملاء</h3>
+            <div id="customersList" class="customers-grid"></div>
+        </div>
+    </div>
+
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="hideLoginModal()">×</button>
+            <h3>تسجيل الدخول للوحة التحكم</h3>
+            <div class="form-group">
+                <input type="password" id="adminPassword" placeholder="كلمة المرور">
+                <button onclick="checkPassword()">دخول</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // تهيئة مخزن البيانات
+        if (!localStorage.getItem('customers')) {
+            localStorage.setItem('customers', JSON.stringify({}));
+        }
+        if (!localStorage.getItem('feeds')) {
+            localStorage.setItem('feeds', JSON.stringify({
+                'علف أبقار': 100,
+                'علف أغنام': 90,
+                'علف دواجن': 80,
+                'علف جمال': 70
+            }));
+        }
+
+        let currentCustomer = '';
+
+        // تحديث قائمة الأعلاف في النموذج
+        function updateFeedSelect() {
+            const feedType = document.getElementById('feedType');
+            const feeds = JSON.parse(localStorage.getItem('feeds'));
+            
+            feedType.innerHTML = '<option value="0">اختر نوع العلف</option>';
+            Object.entries(feeds).forEach(([name, price]) => {
+                const option = document.createElement('option');
+                option.value = price;
+                option.textContent = name;
+                feedType.appendChild(option);
+            });
+        }
+
+        function calculateTotal() {
+            const price = parseFloat(document.getElementById('price').value) || 0;
+            const quantity = parseFloat(document.getElementById('quantity').value) || 0;
+            
+            const total = price * quantity;
+            document.getElementById('totalResult').innerHTML = `
+                الإجمالي: ${total.toFixed(2)} جنيه
+            `;
+            return total;
+        }
+
+        function updatePrice() {
+            const feedType = document.getElementById('feedType');
+            const price = document.getElementById('price');
+            price.value = feedType.value;
+            calculateTotal();
+        }
+
+        function showAdminLogin() {
+            document.getElementById('loginModal').style.display = 'block';
+        }
+
+        function hideLoginModal() {
+            document.getElementById('loginModal').style.display = 'none';
+        }
+
+        function checkPassword() {
+            const password = document.getElementById('adminPassword').value;
+            if (password === 'ppoo0099') {
+                document.getElementById('loginModal').style.display = 'none';
+                document.getElementById('adminPanel').style.display = 'block';
+                document.getElementById('adminPassword').value = '';
+                updateFeedsList();
+            } else {
+                alert('كلمة المرور غير صحيحة');
+            }
+        }
+
+        function updateFeedsList() {
+            const feedsList = document.getElementById('feedsList');
+            const feeds = JSON.parse(localStorage.getItem('feeds'));
+            
+            feedsList.innerHTML = '';
+            Object.entries(feeds).forEach(([name, price]) => {
+                const div = document.createElement('div');
+                div.className = 'feed-item';
+                
+                const nameInput = document.createElement('input');
+                nameInput.value = name;
+                nameInput.type = 'text';
+                
+                const priceInput = document.createElement('input');
+                priceInput.value = price;
+                priceInput.type = 'number';
+                
+                const updateBtn = document.createElement('button');
+                updateBtn.textContent = 'تحديث';
+                updateBtn.onclick = () => updateFeed(name, nameInput.value, priceInput.value);
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.textContent = 'حذف';
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.onclick = () => deleteFeed(name);
+                
+                div.appendChild(nameInput);
+                div.appendChild(priceInput);
+                div.appendChild(updateBtn);
+                div.appendChild(deleteBtn);
+                feedsList.appendChild(div);
+            });
+        }
+
+        function addNewFeed() {
+            const name = document.getElementById('newFeedName').value;
+            const price = document.getElementById('newFeedPrice').value;
+            
+            if (!name || !price) {
+                alert('الرجاء إدخال الاسم والسعر');
+                return;
+            }
+            
+            const feeds = JSON.parse(localStorage.getItem('feeds'));
+            feeds[name] = parseFloat(price);
+            localStorage.setItem('feeds', JSON.stringify(feeds));
+            
+            updateFeedsList();
+            updateFeedSelect();
+            
+            document.getElementById('newFeedName').value = '';
+            document.getElementById('newFeedPrice').value = '';
+        }
+
+        function updateFeed(oldName, newName, newPrice) {
+            const feeds = JSON.parse(localStorage.getItem('feeds'));
+            delete feeds[oldName];
+            feeds[newName] = parseFloat(newPrice);
+            localStorage.setItem('feeds', JSON.stringify(feeds));
+            
+            updateFeedsList();
+            updateFeedSelect();
+        }
+
+        function deleteFeed(name) {
+            if (confirm(`هل أنت متأكد من حذف ${name}؟`)) {
+                const feeds = JSON.parse(localStorage.getItem('feeds'));
+                delete feeds[name];
+                localStorage.setItem('feeds', JSON.stringify(feeds));
+                
+                updateFeedsList();
+                updateFeedSelect();
+            }
+        }
+
+        function savePurchase() {
+            const customerName = document.getElementById('customerName').value.trim();
+            if (!customerName) {
+                alert('الرجاء إدخال اسم العميل');
+                return;
+            }
+
+            const feedType = document.getElementById('feedType');
+            const feedTypeName = feedType.options[feedType.selectedIndex].text;
+            const quantity = parseFloat(document.getElementById('quantity').value);
+            const price = parseFloat(document.getElementById('price').value);
+            const total = calculateTotal();
+
+            if (price === 0 || isNaN(quantity)) {
+                alert('الرجاء إدخال جميع البيانات المطلوبة');
+                return;
+            }
+
+            const customers = JSON.parse(localStorage.getItem('customers'));
+            
+            const purchase = {
+                date: new Date().toLocaleDateString('ar'),
+                feedType: feedTypeName,
+                quantity: quantity,
+                pricePerBag: price,
+                total: total
+            };
+
+            if (!customers[customerName]) {
+                customers[customerName] = [];
+            }
+            customers[customerName].push(purchase);
+
+            localStorage.setItem('customers', JSON.stringify(customers));
+            updateCustomersList();
+            
+            // تنظيف النموذج
+            document.getElementById('feedType').value = "0";
+            document.getElementById('quantity').value = "1";
+            document.getElementById('price').value = "";
+            document.getElementById('totalResult').innerHTML = "الإجمالي: 0 جنيه";
+
+            alert('تم حفظ المشتريات بنجاح');
+        }
+
+        function updateCustomersList() {
+            const customers = JSON.parse(localStorage.getItem('customers'));
+            const customersList = document.getElementById('customersList');
+            customersList.innerHTML = '';
+
+            Object.keys(customers).forEach(customer => {
+                const button = document.createElement('button');
+                button.className = 'customer-button';
+                button.textContent = customer;
+                button.onclick = () => showCustomerHistory(customer);
+                customersList.appendChild(button);
+            });
+        }
+
+        function showCustomerHistory(customerName) {
+            currentCustomer = customerName;
+            const customers = JSON.parse(localStorage.getItem('customers'));
+            const customerPurchases = customers[customerName];
+            const historyTitle = document.getElementById('historyTitle');
+            const historyTableBody = document.getElementById('historyTableBody');
+            const purchasesHistory = document.getElementById('purchasesHistory');
+
+            historyTitle.textContent = `سجل مشتريات ${customerName}`;
+            historyTableBody.innerHTML = '';
+
+            let totalAmount = 0;
+
+            customerPurchases.forEach(purchase => {
+                const row = historyTableBody.insertRow();
+                row.insertCell(0).textContent = purchase.date;
+                row.insertCell(1).textContent = purchase.feedType;
+                row.insertCell(2).textContent = purchase.quantity;
+                row.insertCell(3).textContent = purchase.pricePerBag;
+                row.insertCell(4).textContent = purchase.total.toFixed(2);
+
+                totalAmount += purchase.total;
+            });
+
+            purchasesHistory.style.display = 'block';
+        }
+
+        function deleteCustomer() {
+            if (!currentCustomer) return;
+            
+            const password = prompt('الرجاء إدخال كلمة المرور للحذف:');
+            if (password === 'ppoo0099') {
+                if (confirm(`هل أنت متأكد من حذف العميل ${currentCustomer}؟`)) {
+                    const customers = JSON.parse(localStorage.getItem('customers'));
+                    delete customers[currentCustomer];
+                    localStorage.setItem('customers', JSON.stringify(customers));
+                    
+                    document.getElementById('purchasesHistory').style.display = 'none';
+                    updateCustomersList();
+                    currentCustomer = '';
+                }
+            } else {
+                alert('كلمة المرور غير صحيحة');
+            }
+        }
+
+        function showCustomersList() {
+            document.getElementById('customersModal').style.display = 'block';
+            updateCustomersList();
+        }
+
+        function hideCustomersList() {
+            document.getElementById('customersModal').style.display = 'none';
+        }
+
+        function hideAdminPanel() {
+            document.getElementById('adminPanel').style.display = 'none';
+        }
+
+        // تنفيذ التهيئة
+        updateFeedSelect();
+    </script>
+  <footer style="text-align: center; margin-top: 20px; font-size: 14px; color: var(--primary-color);">
+    &copy; جميع الحقوق محفوظة لـ 
+    <a href="tel:01203619314" style="color: var(--secondary-color); text-decoration: none;">Hassan Abd El-zaher</a>
+</footer>
+</body>
+</html>
